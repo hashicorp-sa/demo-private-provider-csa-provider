@@ -15,10 +15,10 @@ func New(version string) func() *schema.Provider {
 	return func() *schema.Provider {
 		p := &schema.Provider{
 			DataSourcesMap: map[string]*schema.Resource{
-				"customer_success": dataSourceCustomerSuccess(),
+				"csa_specialism": dataSourceSpecialism(),
 			},
 			ResourcesMap: map[string]*schema.Resource{
-				"customer_success": resourceCustomerSuccess(),
+				"csa_specialism": resourceSpecialism(),
 			},
 		}
 

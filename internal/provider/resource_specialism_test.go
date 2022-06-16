@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccResourceScaffolding(t *testing.T) {
+func TestAccResourceSpecialism(t *testing.T) {
 	resource.UnitTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: providerFactories,
@@ -15,8 +15,8 @@ func TestAccResourceScaffolding(t *testing.T) {
 			{
 				Config: testAccResourceScaffolding,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestMatchResourceAttr(
-						"customer_success.foo", "customer_success_architect", regexp.MustCompile("^Jared Holgate")),
+					resource.TestMatchResourceAttr("csa_specialism.foo", "customer_success_architect", regexp.MustCompile("^Jared Holgate")),
+					resource.TestMatchResourceAttr("csa_specialism.foo", "specialism", regexp.MustCompile("^Terraform")),
 				),
 			},
 		},
@@ -24,7 +24,7 @@ func TestAccResourceScaffolding(t *testing.T) {
 }
 
 const testAccResourceScaffolding = `
-resource "customer_success" "foo" {
+resource "csa_specialism" "foo" {
   customer_success_architect = "Jared Holgate"
 }
 `

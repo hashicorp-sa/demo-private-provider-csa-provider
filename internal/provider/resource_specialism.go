@@ -8,14 +8,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func resourceCustomerSuccess() *schema.Resource {
+func resourceSpecialism() *schema.Resource {
 	return &schema.Resource{
-		Description: "Customer Success Example Resource",
+		Description: "Customer Success Example Resource.",
 
-		CreateContext: resourceCustomerSuccessCreate,
-		ReadContext:   resourceCustomerSuccessRead,
-		UpdateContext: resourceCustomerSuccessUpdate,
-		DeleteContext: resourceCustomerSuccessDelete,
+		CreateContext: resourceSpecialismCreate,
+		ReadContext:   resourceSpecialismRead,
+		UpdateContext: resourceSpecialismUpdate,
+		DeleteContext: resourceSpecialismDelete,
 
 		Schema: map[string]*schema.Schema{
 			"customer_success_architect": {
@@ -37,11 +37,14 @@ func resourceCustomerSuccess() *schema.Resource {
 	}
 }
 
-func resourceCustomerSuccessCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceSpecialismCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
-	client := csa_client{id: d.Id()}
 
-	resourceCustomerSuccessRead(ctx, d, meta)
+	architect := d.Get("customer_success_architect").(string)
+	client := csa_client{id: architect}
+
+	d.SetId(architect)
+	resourceSpecialismRead(ctx, d, meta)
 	d.Set("date_configured", client.GetSetupDate())
 
 	tflog.Trace(ctx, "created a resource")
@@ -49,8 +52,8 @@ func resourceCustomerSuccessCreate(ctx context.Context, d *schema.ResourceData, 
 	return diags
 }
 
-func resourceCustomerSuccessRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	var diags diag.Diagnostics	
+func resourceSpecialismRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
 	client := csa_client{id: d.Id()}
 
 	d.Set("specialism", client.GetSpecialism())
@@ -60,11 +63,11 @@ func resourceCustomerSuccessRead(ctx context.Context, d *schema.ResourceData, me
 	return diags
 }
 
-func resourceCustomerSuccessUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceSpecialismUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	client := csa_client{id: d.Id()}
-		
-	resourceCustomerSuccessRead(ctx, d, meta)
+
+	resourceSpecialismRead(ctx, d, meta)
 	d.Set("date_configured", client.GetSetupDate())
 
 	tflog.Trace(ctx, "updated a resource")
@@ -72,11 +75,11 @@ func resourceCustomerSuccessUpdate(ctx context.Context, d *schema.ResourceData, 
 	return diags
 }
 
-func resourceCustomerSuccessDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceSpecialismDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 
 	d.SetId("")
-	resourceCustomerSuccessRead(ctx, d, meta)
+	resourceSpecialismRead(ctx, d, meta)
 	d.Set("date_configured", "")
 
 	tflog.Trace(ctx, "deleted a resource")
