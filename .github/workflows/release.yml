@@ -62,7 +62,8 @@ jobs:
     needs: goreleaser
     steps:
       - name: Run Curl Commands
-        script: |
+        shell: bash
+        run: |
           echo "Here we go!"
 
 
