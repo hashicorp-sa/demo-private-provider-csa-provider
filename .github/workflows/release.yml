@@ -61,6 +61,31 @@ jobs:
         run: |
           echo "Here we go!"
           ls dist
+
+          gpg_public_key=$(cat gpg_public_key.txt | tr -d '\n' '\\n')
+
+          echo "$gpg_public_key"
           
+          gpg_payload = <<-EOF
+            {
+              "data": {
+                "type": "gpg-keys",
+                "attributes": {
+                  "namespace": "hashicorp",
+                  "ascii-armor": "$pgp_public_key"
+                }  }
+            }
+          EOF
+
+          echo "$gpg_payload"
+
+          $gpg_response=$(curl \
+            --header "Authorization: Bearer ${{ secrets.TF_TOKEN }}" \
+            --header "Content-Type: application/vnd.api+json" \
+            --request POST \
+            --data-binary @- $gpg_payload \
+            https://${{ secrets.TF_URL }}/api/registry/private/v2/gpg-keys)
+
+          echo "$gpg_response"
 
 
