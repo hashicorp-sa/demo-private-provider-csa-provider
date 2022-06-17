@@ -66,18 +66,17 @@ jobs:
 
           echo "$gpg_public_key"
           
-          gpg_payload=$(cat <<-EOF
-            {
-              "data": {
-                "type": "gpg-keys",
-                "attributes": {
-                  "namespace": "${{ secrets.TF_ORG }}",
-                  "ascii-armor": "$pgp_public_key"
-                }  
-              }
+          cat >gpg_payload.json <<-EOF 
+          { 
+            "data": {
+              "type": "gpg-keys",
+              "attributes": {
+                "namespace": "${{ secrets.TF_ORG }}",
+                "ascii-armor": "$pgp_public_key"
+              }  
             }
+          }
           EOF
-          )
 
           echo "$gpg_payload"
 
@@ -85,7 +84,7 @@ jobs:
             --header "Authorization: Bearer ${{ secrets.TF_TOKEN }}" \
             --header "Content-Type: application/vnd.api+json" \
             --request POST \
-            --data-binary @- $gpg_payload \
+            --data-binary @gpg_payload.json \
             https://${{ secrets.TF_URL }}/api/registry/private/v2/gpg-keys)
 
           echo "$gpg_response"
