@@ -4,8 +4,8 @@
 
 ## Getting Started & Documentation
 
-{This section contains any instrutions for using the code, e.g. building, running, any variables required, etc}
-{Link out to more detailed docs as required}
+In order to run the [release.yml](.github/workflows/release.yml) workflow, you'll need to set the GPG private key and passphrase. Follow (these steps)[https://learn.hashicorp.com/tutorials/terraform/provider-release-publish?in=terraform/providers#generate-gpg-signing-key
+] to do that.
 
 ## Contributing
 
