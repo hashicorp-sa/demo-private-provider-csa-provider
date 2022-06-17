@@ -78,13 +78,13 @@ jobs:
           }
           EOF
 
-          echo "$gpg_payload"
+          cat gpg_payload.json
 
           $gpg_response=$(curl \
             --header "Authorization: Bearer ${{ secrets.TF_TOKEN }}" \
             --header "Content-Type: application/vnd.api+json" \
             --request POST \
-            --data-binary @gpg_payload.json \
+            --data @gpg_payload.json \
             https://${{ secrets.TF_URL }}/api/registry/private/v2/gpg-keys)
 
           echo "$gpg_response"
