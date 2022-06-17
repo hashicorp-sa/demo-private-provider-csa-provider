@@ -56,14 +56,11 @@ jobs:
           name: provider
           path: dist/*
 
-  deploytoprivateregistry:
-    name: Deploy to Private Registry
-    runs-on: ubuntu-latest
-    needs: goreleaser
-    steps:
-      - name: Run Curl Commands
+      - name: Push to Private Registry
         shell: bash
         run: |
           echo "Here we go!"
+          ls dist
+          
 
 
