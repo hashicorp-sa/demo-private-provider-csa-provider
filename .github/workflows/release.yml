@@ -66,7 +66,7 @@ jobs:
 
           echo "$gpg_public_key"
           
-          gpg_payload=<<-EOF
+          gpg_payload=$(cat <<-EOF
             {
               "data": {
                 "type": "gpg-keys",
@@ -77,6 +77,7 @@ jobs:
               }
             }
           EOF
+          )
 
           echo "$gpg_payload"
 
