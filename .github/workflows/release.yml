@@ -62,7 +62,7 @@ jobs:
           echo "Here we go!"
           ls dist
 
-          gpg_public_key=$(cat gpg_public_key.txt | tr -d '\n' '\\n')
+          gpg_public_key=$(awk '{printf "%s\\n", $0}' gpg_public_key.txt)
 
           echo "$gpg_public_key"
           
