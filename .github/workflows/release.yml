@@ -72,7 +72,7 @@ jobs:
               "type": "gpg-keys",
               "attributes": {
                 "namespace": "${{ secrets.TF_ORG }}",
-                "ascii-armor": "$pgp_public_key"
+                "ascii-armor": "$gpg_public_key"
               }  
             }
           }
