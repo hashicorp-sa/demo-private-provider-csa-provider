@@ -71,7 +71,7 @@ jobs:
               "data": {
                 "type": "gpg-keys",
                 "attributes": {
-                  "namespace": "hashicorp",
+                  "namespace": "${{ secrets.TF_ORG }}",
                   "ascii-armor": "$pgp_public_key"
                 }  
               }
