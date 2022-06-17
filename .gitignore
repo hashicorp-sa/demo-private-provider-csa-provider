@@ -35,3 +35,9 @@ website/vendor
 *.winfile eol=crlf
 demo-private-provider-csa-provider
 terraform-provider-csa
+tempToken.txt
+test.txt
+gpg_payload.json
+provider_payload.json
+provider_version_payload.json
+provider_platform_payload.json
