@@ -73,7 +73,8 @@ jobs:
                 "attributes": {
                   "namespace": "hashicorp",
                   "ascii-armor": "$pgp_public_key"
-                }  }
+                }  
+              }
             }
           EOF
 
