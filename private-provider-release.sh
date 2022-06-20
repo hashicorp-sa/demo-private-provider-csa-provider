@@ -1,10 +1,10 @@
 #!/bin/bash
 
-providerName="terraform_provider_csa"
-organizationName="provider-demo"
-terraformUrl="tfe.hashicorpdemo.net"
-version="v1.0.7"
-terraformToken=""
+providerName="" # The name of the provider as it appears in the private registry
+organizationName="" # The Terraform Enterprise or Cloud organization name
+terraformUrl="" # The Terraforn Enterprise or Cloud URL
+version="" # The version of the provider. Must be SemVer in the format 0.0.0 or v0.0.0
+terraformToken="" # The Terraform Enterprise or Cloud API token
 
 while getopts o:u:t:v:p: flag
 do
@@ -21,7 +21,7 @@ if [[ -z $terraformToken ]]; then
     terraformToken=`cat ./temptoken.txt`
 fi
 
-echo "Here we go!"
+echo "Publishing provider $providerName"
 
 gpg_public_key=$(awk '{printf "%s\\n", $0}' gpg_public_key.txt)
 
@@ -58,15 +58,14 @@ if [[ $gpgKey == "{\"errors\":[\"Not Found\"]}" ]]; then
 fi
 
 
-providerShortName=$(echo $providerName | cut -d '_' -f3)
-echo "Creating provider $providerShortName"
+echo "Creating provider $providerName"
 
 cat >provider_payload.json <<-EOF 
 {
   "data": {
     "type": "registry-providers",
     "attributes": {
-      "name": "$providerShortName",
+      "name": "$providerName",
       "namespace": "$organizationName",
       "registry-name": "private"
     }
@@ -103,12 +102,28 @@ providerVersion=$(curl -s \
   --header "Content-Type: application/vnd.api+json" \
   --request POST \
   --data @provider_version_payload.json \
-  https://$terraformUrl/api/v2/organizations/$organizationName/registry-providers/private/$organizationName/$providerShortName/versions)
+  https://$terraformUrl/api/v2/organizations/$organizationName/registry-providers/private/$organizationName/$providerName/versions)
+
+platformsJson=$(cat dist/artifacts.json)
 
 shasumsUploadUrl=$(echo $providerVersion | jq -r '.data.links."shasums-upload"')
 shasumsSigUploadUrl=$(echo $providerVersion | jq -r '.data.links."shasums-sig-upload"')
-shasumsFile="dist/${providerName}_${version}_SHA256SUMS"
-shasumsSigFile="dist/${providerName}_${version}_SHA256SUMS.sig"
+
+platforms=$(echo $platformsJson | jq -r '.[] | select(.type == "Checksum") | @base64')
+for row in $platforms; do
+    _jq() {
+     echo ${row} | base64 --decode | jq -r ${1}
+    }
+   shasumsFile=$(_jq '.path')
+done
+
+platforms=$(echo $platformsJson | jq -r '.[] | select(.type == "Signature") | @base64')
+for row in $platforms; do
+    _jq() {
+     echo ${row} | base64 --decode | jq -r ${1}
+    }
+   shasumsSigFile=$(_jq '.path')
+done
 
 echo "Uploading shasums file..."
 curl -s \
@@ -124,7 +139,6 @@ curl -s \
   --data-binary @$shasumsSigFile \
   $shasumsSigUploadUrl
 
-platformsJson=$(cat dist/artifacts.json)
 
 platforms=$(echo $platformsJson | jq -r '.[] | select(.type == "Archive") | @base64')
 
@@ -163,7 +177,7 @@ EOF
     --header "Content-Type: application/vnd.api+json" \
     --request POST \
     --data @provider_platform_payload.json \
-    https://$terraformUrl/api/v2/organizations/$organizationName/registry-providers/private/$organizationName/$providerShortName/versions/$version/platforms)
+    https://$terraformUrl/api/v2/organizations/$organizationName/registry-providers/private/$organizationName/$providerName/versions/$version/platforms)
 
     platformUploadUrl=$(echo $platformUpload | jq -r '.data.links."provider-binary-upload"')
 
@@ -175,4 +189,4 @@ EOF
 
 done
 
-echo "We are done!"
+echo "Completed publishing provider $providerName"
