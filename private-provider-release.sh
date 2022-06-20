@@ -60,7 +60,6 @@ fi
 
 
 providerShortName=$(echo $providerName | cut -d '_' -f3)
-
 echo "Creating provider $providerShortName"
 
 cat >provider_payload.json <<-EOF 
@@ -76,12 +75,12 @@ cat >provider_payload.json <<-EOF
 }
 EOF
 
-curl -s \
+$providerOutput=$(curl -s \
   --header "Authorization: Bearer $terraformToken" \
   --header "Content-Type: application/vnd.api+json" \
   --request POST \
   --data @provider_payload.json \
-  https://$terraformUrl/api/v2/organizations/$organizationName/registry-providers
+  https://$terraformUrl/api/v2/organizations/$organizationName/registry-providers)
 
 
 version=$(echo $version | tr -d 'v')
@@ -169,7 +168,7 @@ EOF
 
     platformUploadUrl=$(echo $platformUpload | jq -r '.data.links."provider-binary-upload"')
 
-    curl \
+    curl -s \
         --header "Content-Type: application/octet-stream" \
         --request PUT \
         --data-binary @$filepath \
