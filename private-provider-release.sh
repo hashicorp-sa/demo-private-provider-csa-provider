@@ -6,7 +6,7 @@ terraformUrl="tfe.hashicorpdemo.net"
 version="v1.0.7"
 terraformToken=""
 
-while getopts o:u:t:v: flag
+while getopts o:u:t:v:p: flag
 do
     case "${flag}" in
         o) organizationName=${OPTARG};;
@@ -22,7 +22,6 @@ if [[ -z $terraformToken ]]; then
 fi
 
 echo "Here we go!"
-ls dist
 
 gpg_public_key=$(awk '{printf "%s\\n", $0}' gpg_public_key.txt)
 
@@ -75,7 +74,7 @@ cat >provider_payload.json <<-EOF
 }
 EOF
 
-$providerOutput=$(curl -s \
+providerOutput=$(curl -s \
   --header "Authorization: Bearer $terraformToken" \
   --header "Content-Type: application/vnd.api+json" \
   --request POST \
