@@ -53,6 +53,6 @@ jobs:
           path: dist/*
       - name: Push to Private Registry
         shell: bash
-        run: ./private-provider-release.sh -o "${{ secrets.TF_ORG }}" -u "${{ secrets.TF_URL }}" -v "${{ env.RELEASE_VERSION }}" -t "${{ secrets.GITHUB_TOKEN }}"
+        run: ./private-provider-release.sh -o "${{ secrets.TF_ORG }}" -u "${{ secrets.TF_URL }}" -v "${{ env.RELEASE_VERSION }}" -t "${{ secrets.TF_TOKEN }}" -p "terraform_provider_csa"
 
 

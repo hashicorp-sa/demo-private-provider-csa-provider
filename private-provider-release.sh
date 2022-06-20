@@ -13,6 +13,7 @@ do
         u) terraformUrl=${OPTARG};;
         t) terraformToken=${OPTARG};;
         v) version=${OPTARG};;
+        p) providerName=${OPTARG};;
     esac
 done
 
@@ -39,14 +40,17 @@ EOF
 
 gpgKeyId=$(gpg --show-keys gpg_public_key.txt | sed -n 2p | xargs | tail -c 17)
 
-gpgKey=$(curl \
+echo "Checking if GPG key exists..."
+
+gpgKey=$(curl -s \
   --header "Authorization: Bearer $terraformToken" \
   --header "Content-Type: application/vnd.api+json" \
   --request GET \
   "https://$terraformUrl/api/registry/private/v2/gpg-keys/$organizationName/$gpgKeyId")
 
 if [[ $gpgKey == "{\"errors\":[\"Not Found\"]}" ]]; then
-  curl \
+  echo "GPG key does not exist, creating..."
+  curl -s \
     --header "Authorization: Bearer $terraformToken" \
     --header "Content-Type: application/vnd.api+json" \
     --request POST \
@@ -72,7 +76,7 @@ cat >provider_payload.json <<-EOF
 }
 EOF
 
-curl \
+curl -s \
   --header "Authorization: Bearer $terraformToken" \
   --header "Content-Type: application/vnd.api+json" \
   --request POST \
@@ -96,7 +100,7 @@ cat >provider_version_payload.json <<-EOF
 }
 EOF
 
-providerVersion=$(curl \
+providerVersion=$(curl -s \
   --header "Authorization: Bearer $terraformToken" \
   --header "Content-Type: application/vnd.api+json" \
   --request POST \
@@ -108,13 +112,15 @@ shasumsSigUploadUrl=$(echo $providerVersion | jq -r '.data.links."shasums-sig-up
 shasumsFile="dist/${providerName}_${version}_SHA256SUMS"
 shasumsSigFile="dist/${providerName}_${version}_SHA256SUMS.sig"
 
-curl \
+echo "Uploading shasums file..."
+curl -s \
   --header "Content-Type: application/octet-stream" \
   --request PUT \
   --data-binary @$shasumsFile \
   $shasumsUploadUrl
 
-curl \
+echo "Uploading shasums signature file..."
+curl -s \
   --header "Content-Type: application/octet-stream" \
   --request PUT \
   --data-binary @$shasumsSigFile \
@@ -124,7 +130,7 @@ platformsJson=$(cat dist/artifacts.json)
 
 platforms=$(echo $platformsJson | jq -r '.[] | select(.type == "Archive") | @base64')
 
-echo "$platforms"
+echo "Uploading binaries for each platform..."
 
 for row in $platforms; do
     _jq() {
@@ -136,7 +142,7 @@ for row in $platforms; do
    filepath=$(_jq '.path')
    shasum=$(grep "$filename" $shasumsFile | cut -d " " -f1)
 
-   echo "Creating provider version $filename for $goos $goarch"
+   echo "Creating provider platform $filename for $goos $goarch"
 
    cat >provider_platform_payload.json <<-EOF 
     {
@@ -152,7 +158,9 @@ for row in $platforms; do
     }
 EOF
 
-    platformUpload=$(curl \
+    echo "Uploading $filename..."
+
+    platformUpload=$(curl -s \
     --header "Authorization: Bearer $terraformToken" \
     --header "Content-Type: application/vnd.api+json" \
     --request POST \
