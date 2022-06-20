@@ -35,5 +35,3 @@ jobs:
       - name: Push to Private Registry
         shell: bash
         run: ./private-provider-release.sh -o "${{ secrets.TF_ORG }}" -u "${{ secrets.TF_URL }}" -v "${{ env.RELEASE_VERSION }}" -t "${{ secrets.TF_TOKEN }}" -p "csa"
-
-
