@@ -55,7 +55,7 @@ if [[ $gpgKey == "{\"errors\":[\"Not Found\"]}" ]]; then
 fi
 
 
-providerShortName=$(echo $providerName | cut -d'-' -f3)
+providerShortName=$(echo $providerName | cut -d '_' -f3)
 
 echo "Creating provider $providerShortName"
 
@@ -120,23 +120,53 @@ curl \
   --data-binary @$shasumsSigFile \
   $shasumsSigUploadUrl
 
-cat >provider_platform_payload.json <<-EOF 
-{
-  "data": {
-    "type": "registry-provider-version-platforms",
-    "attributes": {
-      "os": "linux",
-      "arch": "amd64",
-      "shasum": "8f69533bc8afc227b40d15116358f91505bb638ce5919712fbb38a2dec1bba38",
-      "filename": "terraform-provider-aws_3.1.1_linux_amd64.zip"
+platformsJson=$(cat dist/artifacts.json)
+
+platforms=$(echo $platformsJson | jq -r '.[] | select(.type == "Archive") | @base64')
+
+echo "$platforms"
+
+for row in $platforms; do
+    _jq() {
+     echo ${row} | base64 --decode | jq -r ${1}
     }
-  }
-}
+   goos=$(_jq '.goos')
+   goarch=$(_jq '.goarch')
+   filename=$(_jq '.name')
+   filepath=$(_jq '.path')
+   shasum=$(grep "$filename" $shasumsFile | cut -d " " -f1)
+
+   echo "Creating provider version $filename for $goos $goarch"
+
+   cat >provider_platform_payload.json <<-EOF 
+    {
+        "data": {
+            "type": "registry-provider-version-platforms",
+            "attributes": {
+                "os": "$goos",
+                "arch": "$goarch",
+                "shasum": "$shasum",
+                "filename": "$filename"
+            }
+        }
+    }
 EOF
 
-curl \
-  --header "Authorization: Bearer $TOKEN" \
-  --header "Content-Type: application/vnd.api+json" \
-  --request POST \
-  --data @payload.json \
-  https://$terraformUrl/api/v2/organizations/hashicorp/registry-providers/private/$organizationName/aws/versions/$version/platforms
+    platformUpload=$(curl \
+    --header "Authorization: Bearer $terraformToken" \
+    --header "Content-Type: application/vnd.api+json" \
+    --request POST \
+    --data @provider_platform_payload.json \
+    https://$terraformUrl/api/v2/organizations/$organizationName/registry-providers/private/$organizationName/$providerShortName/versions/$version/platforms)
+
+    platformUploadUrl=$(echo $platformUpload | jq -r '.data.links."provider-binary-upload"')
+
+    curl \
+        --header "Content-Type: application/octet-stream" \
+        --request PUT \
+        --data-binary @$filepath \
+        $platformUploadUrl
+
+done
+
+echo "We are done!"
