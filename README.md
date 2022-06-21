@@ -1,6 +1,12 @@
 ## Description
 
-{This section contains a description of this repository and what it's purpose is}
+This repository demonstrates building, releases and publishing a custom Terraform provider to the private registry in Terraform Enterprise and Cloud.
+
+It consists of:
+
+- A provider written in golang based on the https://github.com/hashicorp/terraform-provider-scaffolding template.
+- A GitHub Action to build and release the provider using goreleaser.
+- A [bash script]() example of calling the Terraform Enterprise / Cloud API to create and publish the provider to the private registry.
 
 ## Getting Started & Documentation
 
