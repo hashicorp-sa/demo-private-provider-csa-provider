@@ -15,8 +15,8 @@ func TestAccResourceAnimal(t *testing.T) {
 			{
 				Config: testAccResourceAnimal,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestMatchResourceAttr("csa_animal.foo", "class", regexp.MustCompile("^Bird")),
-					resource.TestMatchResourceAttr("csa_animal.foo", "animal", regexp.MustCompile("^Peregrine Falcon")),
+					resource.TestMatchResourceAttr("demo_animal.foo", "class", regexp.MustCompile("^Bird")),
+					resource.TestMatchResourceAttr("demo_animal.foo", "animal", regexp.MustCompile("^Peregrine Falcon")),
 				),
 			},
 		},
@@ -24,7 +24,7 @@ func TestAccResourceAnimal(t *testing.T) {
 }
 
 const testAccResourceAnimal = `
-resource "csa_animal" "foo" {
+resource "demo_animal" "foo" {
   class = "Bird"
 }
 `
