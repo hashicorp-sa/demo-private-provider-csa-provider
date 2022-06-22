@@ -5,20 +5,23 @@ import (
 	"time"
 )
 
-type csa_client struct {
+type animal_client struct {
 	id string
 }
 
-func (c *csa_client) GetSpecialism() string {
-	specialisms := make(map[string]string)
-	specialisms[""] = ""
-	specialisms["jared holgate"] = "Terraform"
-	specialisms["jan repnak"] = "Consul"
-	specialisms["colin turney"] = "Vault"
+func (c *animal_client) GetAnimalFromClass() string {
+	animals := make(map[string]string)
+	animals[""] = "Duck Billed Platipus"
+	animals["mammal"] = "Horse"
+	animals["bird"] = "Peregrine Falcon"
+	animals["invertebrate"] = "Stag Beetle"
+	animals["fish"] = "Great White Shark"
+	animals["reptile"] = "Blue Iguana"
+	animals["amphibian"] = "Common Frog"
 
-	return specialisms[strings.ToLower(c.id)]
+	return animals[strings.ToLower(c.id)]
 }
 
-func (c *csa_client) GetSetupDate() string {
+func (c *animal_client) GetSetupDate() string {
 	return time.Now().Format("2006-01-02 15:04:05")
 }

@@ -7,24 +7,24 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccDataSourceAnimal(t *testing.T) {
+func TestAccResourceAnimal(t *testing.T) {
 	resource.UnitTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: providerFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceAnimal,
+				Config: testAccResourceAnimal,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestMatchResourceAttr("data.csa_animal.foo", "class", regexp.MustCompile("^Bird")),
-					resource.TestMatchResourceAttr("data.csa_animal.foo", "animal", regexp.MustCompile("^Peregrine Falcon")),
+					resource.TestMatchResourceAttr("csa_animal.foo", "class", regexp.MustCompile("^Bird")),
+					resource.TestMatchResourceAttr("csa_animal.foo", "animal", regexp.MustCompile("^Peregrine Falcon")),
 				),
 			},
 		},
 	})
 }
 
-const testAccDataSourceAnimal = `
-data "csa_animal" "foo" {
+const testAccResourceAnimal = `
+resource "csa_animal" "foo" {
   class = "Bird"
 }
 `
