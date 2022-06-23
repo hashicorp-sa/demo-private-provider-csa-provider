@@ -1,6 +1,6 @@
 ## Description
 
-This repository demonstrates building, releases and publishing a custom Terraform provider to the private registry in Terraform Enterprise and Cloud.
+This repository demonstrates building, releasing and publishing a custom Terraform provider to the private registry in Terraform Enterprise and Cloud.
 
 It consists of:
 
