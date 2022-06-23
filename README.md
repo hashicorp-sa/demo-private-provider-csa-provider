@@ -20,7 +20,7 @@ The GitHub Action [release.yml](release.yml) requires the following secrets to b
 
 Follow these steps to setup and run the demo:
 
-1. Setup and instance of Terraform Enterprise or Cloud and create an organization.
+1. Setup an instance of Terraform Enterprise or Cloud and create an organization.
 1. Fork and clone this repository.
 1. Generate a public and private key GPG following [these instructions](generating-gpg-keys).
 1. Save the public key in [gpg_public_key.txt](gpg_public_key.txt).
@@ -43,7 +43,7 @@ In order to run the [release.yml](.github/workflows/release.yml) workflow, you'l
 
 The [release.yml](.github/workflows/release.yml) GitHub Action will build the provider and publish it to the private registry in Terraform Enterprise or Cloud. It completes the following steps:
 
-1. Checkout the code.
+1. Checks out the code.
 1. Pulls the git history down, so it can see the tags.
 1. Installs `go` based on the version required by the provider.
 1. Imports the GPG key using the private key and passphrase.
