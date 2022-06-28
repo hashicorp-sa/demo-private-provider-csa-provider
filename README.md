@@ -10,7 +10,7 @@ It consists of:
 
 ## Getting Started & Documentation
 
-The GitHub Action [release.yml](release.yml) requires the following secrets to be set at the repository or environment scope:
+The GitHub Action [release.yml](.github/workflows/release.yml) requires the following secrets to be set at the repository or environment scope:
 
 - `GPG_PRIVATE_KEY`: The GPG private key. See below for how to generate this.
 - `PASSPHRASE`: The GPG private key passphrase. See [below](generating-gpg-keys) for how to generate this.
@@ -29,7 +29,7 @@ Follow these steps to setup and run the demo:
 1. Add the Terraform Enterprise or Cloud URL, API token and organization to the `TF_URL`, `TF_TOKEN` and `TF_ORG` secrets in GitHub.
 1. Commit the [gpg_public_key.txt](gpg_public_key.txt) and push to origin.
 1. Add a new tag and push it to origin. e.g. `git tag v1.0.1` and `git push --tags`.
-1. The new tag will trigger the [release.yml](release.yml) GitHub Action to build and release the provider.
+1. The new tag will trigger the [release.yml](.github/workflows/release.yml) GitHub Action to build and release the provider.
 1. Watch the GitHub Action complete and then navigate to the private registry in Terraform Enterprise or Cloud to see your published provider.
 1. Head over to the [demo](https://github.com/HashiCorp-CSA/demo-private-provider-csa-provider-demo) repository for the next steps.
 
