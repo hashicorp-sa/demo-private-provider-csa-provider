@@ -2,7 +2,7 @@ package provider
 
 import (
 	"context"
-
+	"github.com/hashicorp-csa/terraform-provider-csa/client/animals"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -40,10 +40,10 @@ func resourceAnimals() *schema.Resource {
 func resourceAnimalsCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	architect := d.Get("class").(string)
-	client := animal_client{id: architect}
+	class := d.Get("class").(string)
+	client := meta.(animals.Client)
 
-	d.SetId(architect)
+	d.SetId(class)
 	resourceAnimalsRead(ctx, d, meta)
 	d.Set("date_configured", client.GetSetupDate())
 
@@ -54,9 +54,10 @@ func resourceAnimalsCreate(ctx context.Context, d *schema.ResourceData, meta int
 
 func resourceAnimalsRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
-	client := animal_client{id: d.Id()}
 
-	d.Set("animal", client.GetAnimalFromClass())
+	client := meta.(animals.Client)
+
+	d.Set("animal", client.GetAnimalFromClass(d.Id()))
 
 	tflog.Trace(ctx, "read a resource")
 
@@ -65,7 +66,7 @@ func resourceAnimalsRead(ctx context.Context, d *schema.ResourceData, meta inter
 
 func resourceAnimalsUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
-	client := animal_client{id: d.Id()}
+	client := meta.(animals.Client)
 
 	resourceAnimalsRead(ctx, d, meta)
 	d.Set("date_configured", client.GetSetupDate())

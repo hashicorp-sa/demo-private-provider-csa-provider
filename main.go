@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 	"github.com/hashicorp-csa/terraform-provider-csa/internal/provider"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 )
 
 // Run "go generate" to format example terraform files and generate the docs for the registry/website

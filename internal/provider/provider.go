@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 
+	"github.com/hashicorp-csa/terraform-provider-csa/client/animals"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -20,6 +21,19 @@ func New(version string) func() *schema.Provider {
 			ResourcesMap: map[string]*schema.Resource{
 				"demo_animal": resourceAnimals(),
 			},
+			Schema: map[string]*schema.Schema{
+				"url": {
+					Type:        schema.TypeString,
+					Required:    true,
+					DefaultFunc: schema.EnvDefaultFunc("ANIMALS_URL", nil),
+				},
+				"token": {
+					Type:        schema.TypeString,
+					Required:    true,
+					Sensitive:   true,
+					DefaultFunc: schema.EnvDefaultFunc("ANIMALS_TOKEN", nil),
+				},
+			},
 		}
 
 		p.ConfigureContextFunc = configure(version, p)
@@ -28,18 +42,22 @@ func New(version string) func() *schema.Provider {
 	}
 }
 
-type apiClient struct {
-	// Add whatever fields, client or connection info, etc. here
-	// you would need to setup to communicate with the upstream
-	// API.
-}
-
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
-	return func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
-		// Setup a User-Agent for your API client (replace the provider name for yours):
-		// userAgent := p.UserAgent("terraform-provider-scaffolding", version)
-		// TODO: myClient.UserAgent = userAgent
+	return func(ctx context.Context, r *schema.ResourceData) (interface{}, diag.Diagnostics) {
+		url := r.Get("url").(string)
+		token := r.Get("token").(string)
 
-		return &apiClient{}, nil
+		var diags diag.Diagnostics
+
+		if (url != "") && (token != "") {
+			client, err := animals.New(url, token)
+			if err != nil {
+				return nil, diag.FromErr(err)
+			}
+
+			return client, diags
+		}
+
+		return nil, diag.Errorf("url and token are required")
 	}
 }
