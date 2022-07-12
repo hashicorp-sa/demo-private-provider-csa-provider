@@ -1,16 +1,17 @@
-package provider
+package animal_test
 
 import (
 	"regexp"
 	"testing"
 
+	"github.com/hashicorp-csa/terraform-provider-csa/internal/testing"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccDataSourceAnimal(t *testing.T) {
 	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: providerFactories,
+		PreCheck:          func() { acceptanceTesting.TestAccPreCheck(t) },
+		ProviderFactories: acceptanceTesting.ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceAnimal,

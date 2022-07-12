@@ -1,4 +1,4 @@
-package provider
+package animal
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourceAnimal() *schema.Resource {
+func DataSourceAnimal() *schema.Resource {
 	return &schema.Resource{
 		Description: "Animal Example Data Source.",
 

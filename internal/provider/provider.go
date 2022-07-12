@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/hashicorp-csa/terraform-provider-csa/client/animals"
+	"github.com/hashicorp-csa/terraform-provider-csa/internal/services/animals"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -16,10 +17,10 @@ func New(version string) func() *schema.Provider {
 	return func() *schema.Provider {
 		p := &schema.Provider{
 			DataSourcesMap: map[string]*schema.Resource{
-				"demo_animal": dataSourceAnimal(),
+				"demo_animal": animal.DataSourceAnimal(),
 			},
 			ResourcesMap: map[string]*schema.Resource{
-				"demo_animal": resourceAnimals(),
+				"demo_animal": animal.ResourceAnimal(),
 			},
 			Schema: map[string]*schema.Schema{
 				"url": {
