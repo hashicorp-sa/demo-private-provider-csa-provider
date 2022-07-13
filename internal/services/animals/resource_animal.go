@@ -50,6 +50,7 @@ func resourceAnimalsCreate(ctx context.Context, d *schema.ResourceData, meta int
 
 	animal, err := client.Create(model)
 	if err != nil {
+		tflog.Error(ctx, "error creating animal")
 		return diag.Errorf("error creating animal: %s", err)
 	}
 
@@ -70,11 +71,16 @@ func resourceAnimalsRead(ctx context.Context, d *schema.ResourceData, meta inter
 	model.Id = d.Id()
 	model.Class = d.Get("class").(string) // This is a cheat for our stateless example.
 	if d.Get("date_configured") != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Warning,
+			Summary:  "date_configured is being set as a fudge",
+		})
 		model.Created = d.Get("date_configured").(string) // This is a cheat for our stateless example.
 	}
 
 	animal, err := client.Read(model)
 	if err != nil {
+		tflog.Error(ctx, "error reading animal")
 		return diag.Errorf("error reading animal: %s", err)
 	}
 
@@ -96,6 +102,7 @@ func resourceAnimalsUpdate(ctx context.Context, d *schema.ResourceData, meta int
 
 	animal, err := client.Update(model)
 	if err != nil {
+		tflog.Error(ctx, "error updating animal")
 		return diag.Errorf("error updating animal: %s", err)
 	}
 	d.Set("animal", animal.Animal)
@@ -115,6 +122,7 @@ func resourceAnimalsDelete(ctx context.Context, d *schema.ResourceData, meta int
 
 	err := client.Delete(model)
 	if err != nil {
+		tflog.Error(ctx, "error deleting animal")
 		return diag.Errorf("error deleting animal: %s", err)
 	}
 
