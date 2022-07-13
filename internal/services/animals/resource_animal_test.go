@@ -18,6 +18,7 @@ func TestAccResourceAnimal(t *testing.T) {
 	resource.UnitTest(t, resource.TestCase{
 		PreCheck:          func() { acceptanceTesting.TestAccPreCheck(t) },
 		ProviderFactories: acceptanceTesting.ProviderFactories,
+		CheckDestroy:      testDoesNotExistsInState(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceAnimalCreate,
@@ -28,8 +29,8 @@ func TestAccResourceAnimal(t *testing.T) {
 				),
 			},
 			{
-				ResourceName: resourceName,
-				ImportState: true,
+				ResourceName:      resourceName,
+				ImportState:       true,
 				ImportStateVerify: false,
 			},
 			{

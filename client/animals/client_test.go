@@ -27,7 +27,7 @@ func TestNewClient(t *testing.T) {
 
 func TestCreateAnimal(t *testing.T) {
 	client, _ := New(url, token)
-	animalCreate := AnimalCreateModel{ Class: "Bird", }
+	animalCreate := AnimalCreateModel{Class: "Bird"}
 
 	animal, _ := client.Create(animalCreate)
 
@@ -41,9 +41,9 @@ func TestCreateAnimal(t *testing.T) {
 
 func TestUpdateAnimal(t *testing.T) {
 	client, _ := New(url, token)
-	animalUpdate := AnimalUpdateModel{ 
-		Id: uuid.New().String(),  
-		Class: "Bird",  
+	animalUpdate := AnimalUpdateModel{
+		Id:    uuid.New().String(),
+		Class: "Bird",
 	}
 
 	animal, _ := client.Update(animalUpdate)
@@ -58,10 +58,10 @@ func TestUpdateAnimal(t *testing.T) {
 
 func TestReadAnimal(t *testing.T) {
 	client, _ := New(url, token)
-	animalRead := AnimalReadModel{ 
-		Id: uuid.New().String(),  
-		Class: "Bird", 
-		Created: "2006-01-02 15:04:05", 
+	animalRead := AnimalReadModel{
+		Id:      uuid.New().String(),
+		Class:   "Bird",
+		Created: "2006-01-02 15:04:05",
 	}
 
 	animal, _ := client.Read(animalRead)
@@ -76,8 +76,8 @@ func TestReadAnimal(t *testing.T) {
 
 func TestDeleteAnimal(t *testing.T) {
 	client, _ := New(url, token)
-	animalDelete := AnimalDeleteModel{ 
-		Id: uuid.New().String(),   
+	animalDelete := AnimalDeleteModel{
+		Id: uuid.New().String(),
 	}
 
 	err := client.Delete(animalDelete)
