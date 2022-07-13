@@ -17,6 +17,7 @@ Animal Example Data Source.
 
 ### Required
 
+- `animal_id` (String) Id of animal.
 - `class` (String) Class of animal.
 
 ### Read-Only
