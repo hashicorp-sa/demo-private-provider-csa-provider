@@ -20,6 +20,9 @@ jobs:
           go-version-file: 'go.mod'
           cache: true
 
+      - name: Set env
+        run: echo "SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)" >> $GITHUB_ENV
+
       - name: Import GPG key
         id: import_gpg
         uses: crazy-max/ghaction-import-gpg@v5.1.0
