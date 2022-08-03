@@ -13,7 +13,7 @@ It consists of:
 The GitHub Action [release.yml](.github/workflows/release.yml) requires the following secrets to be set at the repository or environment scope:
 
 - `GPG_PRIVATE_KEY`: The GPG private key. See below for how to generate this.
-- `PASSPHRASE`: The GPG private key passphrase. See [below](generating-gpg-keys) for how to generate this.
+- `PASSPHRASE`: The GPG private key passphrase. See [below](#generating-gpg-keys) for how to generate this.
 - `TF_URL`: The url for Terraform Enterprise or Cloud.
 - `TF_TOKEN`: The API token for Terraform Enterprise or Cloud.
 - `TF_ORG`: The organization for the private registry Terraform Enterprise or Cloud. 
@@ -22,7 +22,7 @@ Follow these steps to setup and run the demo:
 
 1. Setup an instance of Terraform Enterprise or Cloud and create an organization.
 1. Fork and clone this repository.
-1. Generate a public and private key GPG following [these instructions](generating-gpg-keys).
+1. Generate a public and private key GPG following [these instructions](#generating-gpg-keys).
 1. Save the public key in [gpg_public_key.txt](gpg_public_key.txt).
 1. Add the private key and passphrase to the `GPG_PRIVATE_KEY` and `PASSPHRASE` secrets in GitHub.
 1. Generate an API token for Terraform Enterprise or Cloud.
