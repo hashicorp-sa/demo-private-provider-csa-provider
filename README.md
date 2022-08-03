@@ -36,8 +36,8 @@ Follow these steps to setup and run the demo:
 More details about the steps to release to the private registry can be found [here](https://www.terraform.io/cloud-docs/registry/publish-providers#publishing-a-provider-and-creating-a-version).
 
 ### Generating GPG Keys
-In order to run the [release.yml](.github/workflows/release.yml) workflow, you'll need to set the GPG private key (`GPG_PRIVATE_KEY`) and passphrase (`PASSPHRASE`). Follow (these steps)[https://learn.hashicorp.com/tutorials/terraform/provider-release-publish?in=terraform/providers#generate-gpg-signing-key
-] to do that.
+In order to run the [release.yml](.github/workflows/release.yml) workflow, you'll need to set the GPG private key (`GPG_PRIVATE_KEY`) and passphrase (`PASSPHRASE`). Follow [these steps](https://learn.hashicorp.com/tutorials/terraform/provider-release-publish?in=terraform/providers#generate-gpg-signing-key
+) to do that.
 
 ## What does it do?
 
