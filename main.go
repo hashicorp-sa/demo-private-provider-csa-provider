@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 
-	"github.com/hashicorp-csa/terraform-provider-csa/internal/provider"
+	"github.com/hashicorp-sa/terraform-provider-csa/internal/provider"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 )
 
@@ -35,7 +35,7 @@ func main() {
 	opts := &plugin.ServeOpts{
 		Debug: debugMode,
 
-		ProviderAddr: "registry.terraform.io/hashicorp-csa/demo-private-provider-csa-provider",
+		ProviderAddr: "registry.terraform.io/hashicorp-sa/demo-private-provider-csa-provider",
 
 		ProviderFunc: provider.New(version),
 	}

@@ -1,4 +1,4 @@
-module github.com/hashicorp-csa/terraform-provider-csa
+module github.com/hashicorp-sa/terraform-provider-csa
 
 go 1.17
 
