@@ -3,7 +3,7 @@ package animal
 import (
 	"context"
 
-	"github.com/hashicorp-csa/terraform-provider-csa/client/animals"
+	"github.com/hashicorp-sa/terraform-provider-csa/client/animals"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"

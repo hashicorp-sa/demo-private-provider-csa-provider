@@ -31,13 +31,49 @@ Follow these steps to setup and run the demo:
 1. Add a new tag and push it to origin. e.g. `git tag v1.0.1` and `git push --tags`.
 1. The new tag will trigger the [release.yml](.github/workflows/release.yml) GitHub Action to build and release the provider.
 1. Watch the GitHub Action complete and then navigate to the private registry in Terraform Enterprise or Cloud to see your published provider.
-1. Head over to the [demo](https://github.com/HashiCorp-CSA/demo-private-provider-csa-provider-demo) repository for the next steps.
+1. Head over to the [demo](https://github.com/hashicorp-sa/demo-private-provider-csa-provider-demo) repository for the next steps.
 
 More details about the steps to release to the private registry can be found [here](https://www.terraform.io/cloud-docs/registry/publish-providers#publishing-a-provider-and-creating-a-version).
 
 ### Generating GPG Keys
 In order to run the [release.yml](.github/workflows/release.yml) workflow, you'll need to set the GPG private key (`GPG_PRIVATE_KEY`) and passphrase (`PASSPHRASE`). Follow [these steps](https://learn.hashicorp.com/tutorials/terraform/provider-release-publish?in=terraform/providers#generate-gpg-signing-key
 ) to do that.
+
+```sh
+export GNUPGHOME="$(mktemp -d)"
+export GNUPGPASS="$(openssl rand -base64 29 | tr -d "=+/" | cut -c1-4)"
+cat >foo <<EOF
+     %echo Generating a default key
+     Key-Type: RSA
+     Key-Length: 4096
+     Name-Real: $USER
+     Name-Comment: With Simple Passphrase
+     Name-Email: $USER@hashicorp.com
+     Expire-Date: 0
+     Passphrase: $GNUPGPASS
+     Subkey-Length: 4096
+     # Do a commit here, so that we can later print "done" :-)
+     %commit
+     %echo done
+EOF
+gpg --batch --generate-key foo
+gpg --list-secret-keys
+# https://github.com/settings/tokens
+export GITHUB_TOKEN=YOUR_PAT
+
+# Call Your TFE & Generate an Org Token
+# https://github.com/hashicorp/petshop/blob/main/examples/aio/helpers/helper-tfe.sh
+
+terraform init
+terraform apply -auto-approve \
+     -var="gpg_private_key=$(ls -la $GNUPGHOME |grep trustdb )"  \
+     -var="passphrase=$GNUPGPASS" \
+     -var="tf_url=$TF_URL" \
+     -var="tf_org=$TF_ORG" \
+     -var="tf_token=$TF_TOKEN" 
+
+
+```
 
 ## What does it do?
 

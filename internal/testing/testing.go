@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/hashicorp-csa/terraform-provider-csa/internal/provider"
+	"github.com/hashicorp-sa/terraform-provider-csa/internal/provider"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
